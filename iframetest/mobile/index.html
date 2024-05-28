@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Overlay logo demo</title>
+    </head>
+    <body>
+        <div id="player"></div>
+        <div id="logo" style="display: none;">
+            <img src="../logo.png" style="width: 40px; height: 40px;"/>
+        </div>
+
+        <style>
+            #time {
+                position: absolute;
+                top: 60%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 40pt;
+                font-weight: bold;
+                transform: translate(-50%, -50%);
+                justify-content: center;
+                text-align: center;
+            }
+
+            #logo {
+                position: absolute;
+                top: 30%;
+                left: 50%;
+                transform: translate(-700%, 300%);
+                z-index: 9999; /* Add this line */
+            }
+
+            iframe {
+            display: block;
+            margin: 0 auto;
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            }
+
+            #start {
+            display: block;
+            margin: 0 auto;
+            position: absolute;
+            top: 70%;
+            left: 26.66%;
+            border: 2px solid #000;
+            border-radius: 10px;
+            width: 10%;
+            padding: 20px;
+            font-size: 20pt;
+            }
+
+            #end {
+            display: block;
+            margin: 0 auto;
+            position: absolute;
+            top: 70%;
+            right: 26.66%;
+            width: 10%;
+            padding: 20px;
+            border: 2px solid #000;
+            border-radius: 10px;
+            font-size: 20pt;
+            }
+
+            #startTimeText {
+                position: absolute;
+                top: 67%;
+                left: 26.66%;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 14pt;
+                text-align: left;
+            }
+
+            #endTimeText {
+                position: absolute;
+                top: 67%;
+                right: 41%;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 14pt;
+            }
+
+        </style>
+
+        <div id="time">0</div>
+
+<label id="startTimeText">From</label>
+<input id="start" type="text" id="start" name="start" value="10" />
+<label id="endTimeText">To</label>
+<input id="end" type="text" id="end" name="end" value="20" />
+
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script>
+
+            let start = 10;
+            let end = 20;
+            // Create a variable to hold the YouTube player
+            let player;
+
+            // This function creates an <iframe> (and YouTube player)
+            // after the API code downloads.
+            function onYouTubeIframeAPIReady() {
+                player = new YT.Player("player", {
+                    height: "390",
+                    width: "640",
+                    videoId: "Ah3xGlLIQPA", // Replace with your video ID
+                    events: {
+                        onReady: onPlayerReady,
+                        onStateChange: onPlayerStateChange,
+                    },
+                });
+            }
+
+            // The API will call this function when the video player is ready.
+            function onPlayerReady(event) {
+                event.target.playVideo();
+            }
+
+            // The API calls this function when the player's state changes.
+            function onPlayerStateChange(event) {
+                if (event.data == YT.PlayerState.PLAYING) {
+                    checkCurrentTime();
+                }
+            }
+
+            // Check the current time of the video
+            function checkCurrentTime() {
+                let timer = document.getElementById("time");
+                let targetTime = 30; // Target time in seconds
+                let interval = setInterval(function () {
+                    let currentTime = player.getCurrentTime();
+                    timer.innerHTML = Math.floor(currentTime);
+                    if (currentTime > start && currentTime < end){
+                        // display logo
+                        logo.style.display = 'block';
+                    }
+                    else {
+                        // do not display logo
+                        logo.style.display = 'none';
+                    }
+                }, 1000); // Check every second
+            }
+
+                // Function to be called when the start or end time text boxes are updated
+                function updateTime() {
+                start = parseInt(document.getElementById("start").value);
+                end = parseInt(document.getElementById("end").value);
+            }
+
+            // Add event listeners to the start and end time text boxes
+            document.getElementById("start").addEventListener("input", updateTime);
+            document.getElementById("end").addEventListener("input", updateTime);
+        </script>
+        </script>
+    </body>
+</html>
